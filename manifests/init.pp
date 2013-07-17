@@ -92,6 +92,7 @@ class dashboard (
   $dashboard_config         = $dashboard::params::dashboard_config,
   $dashboard_root           = $dashboard::params::dashboard_root,
   $rails_base_uri           = $dashboard::params::rails_base_uri,
+  $dashboard_workers        = $dashboard::params::dashboard_workers,
   $rack_version             = $dashboard::params::rack_version
 ) inherits dashboard::params {
 
@@ -127,6 +128,14 @@ class dashboard (
       hasrestart => true,
       subscribe  => File['/etc/puppet-dashboard/database.yml'],
       require    => Exec['db-migrate']
+    }
+  }
+
+  if $dashboard_workers {
+    service { 'puppet-dashboard-workers':
+      ensure     => running,
+      enable     => true,
+      hasrestart => true;
     }
   }
 

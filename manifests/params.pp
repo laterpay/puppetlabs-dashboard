@@ -21,6 +21,7 @@ class dashboard::params {
   $dashboard_environment = 'production'
   $dashboard_site        = $::fqdn
   $dashboard_port        = '8080'
+  $dashboard_workers     = true
   $passenger             = false
   $mysql_root_pw         = 'changemetoo'
   $rails_base_uri        = '/'
