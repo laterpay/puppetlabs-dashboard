@@ -14,7 +14,7 @@
 #   [*dashboard_group*]
 #     - Name of the puppet-dashboard group
 #
-#   [*dashbaord_password*]
+#   [*dashboard_password*]
 #     - Password for the puppet-dashboard database use
 #
 #   [*dashboard_db*]
@@ -96,11 +96,12 @@ class dashboard (
   $rack_version             = $dashboard::params::rack_version
 ) inherits dashboard::params {
 
-  require mysql
-  include mysql::bindings::ruby
-
   class { 'mysql::server':
-    config_hash => { 'root_password' => $mysql_root_pw }
+    root_password => $mysql_root_pw,
+  }
+
+  class { 'mysql::bindings':
+    ruby_enable => true,
   }
 
   if $passenger {

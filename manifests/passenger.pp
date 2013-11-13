@@ -34,6 +34,7 @@ class dashboard::passenger (
 
   require ::passenger
   include apache
+  include firewall
 
   file { '/etc/init.d/puppet-dashboard':
     ensure => absent,
@@ -42,6 +43,16 @@ class dashboard::passenger (
   file { 'dashboard_config':
     ensure => absent,
     path   => $dashboard_config,
+  }
+
+  # this could be made a conditional, but the dashboard is
+  # implicitly a public interface, so it seems OK to just
+  # open the port...
+  firewall { "${dashboard_port} accept - puppet dashboard":
+    port   => $dashboard_port,
+    proto  => 'tcp',
+    state  => 'NEW',
+    action => 'accept',
   }
 
   apache::vhost { $dashboard_site:
