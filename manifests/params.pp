@@ -31,7 +31,7 @@ class dashboard::params {
 
     'RedHat': {
       $dashboard_config       = '/etc/sysconfig/puppet-dashboard'
-      $dashboard_service      = ['puppet-dashboard','puppet-dashboard-workers']
+      $dashboard_service      = ['puppet-dashboard']
       $dashboard_package      = 'puppet-dashboard'
       $dashboard_root         = '/usr/share/puppet-dashboard'
     }
