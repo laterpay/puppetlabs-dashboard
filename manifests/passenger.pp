@@ -3,6 +3,9 @@
 # This class configures parameters for the puppet-dashboard module.
 #
 # Parameters:
+#   [*passenger_install*]
+#     - Install passenger using puppetlabs/passenger module or assume it is 
+#       installed by 3rd party 
 #   [*dashboard_site*]
 #     - The ServerName setting for Apache
 #
@@ -25,6 +28,7 @@
 # Sample Usage:
 #
 class dashboard::passenger (
+  $passenger_install = true,
   $dashboard_site,
   $dashboard_port,
   $dashboard_config,
@@ -32,7 +36,9 @@ class dashboard::passenger (
   $rails_base_uri,
 ) inherits dashboard {
 
-  require ::passenger
+  if $passenger_install {
+    require ::passenger
+  }
   include apache
   include firewall
 
@@ -66,5 +72,5 @@ class dashboard::passenger (
     access_log        => true,
     access_log_format => 'combined',
     custom_fragment   => "RailsBaseURI ${rails_base_uri}",
-  } 
+  }
 }

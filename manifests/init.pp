@@ -39,6 +39,12 @@
 #     - Boolean to determine whether Dashboard is to be
 #       used with Passenger
 #
+#   [*passenger_install*]
+#     - Boolean to determine if we install passenger using
+#       puppetlabs/passenger module or assume it is installed by 3rd party
+#       If false, vhost will be created with passenger, but passenger puppet
+#       module won't be called
+#
 #   [*dashboard_config*]
 #     - The Dashboard configuration file
 #
@@ -71,6 +77,7 @@
 #     dashboard_port         => '8080',
 #     mysql_root_pw          => 'REALLY_change_me',
 #     passenger              => true,
+#     passenger_install      => true
 #   }
 #
 #  Note: SELinux on Redhat needs to be set separately to allow access to the
@@ -89,6 +96,7 @@ class dashboard (
   $dashboard_config         = $dashboard::params::dashboard_config,
   $mysql_root_pw            = $dashboard::params::mysql_root_pw,
   $passenger                = $dashboard::params::passenger,
+  $passenger_install        = $dashboard::params::passenger_install,
   $dashboard_config         = $dashboard::params::dashboard_config,
   $dashboard_root           = $dashboard::params::dashboard_root,
   $rails_base_uri           = $dashboard::params::rails_base_uri,
@@ -106,11 +114,12 @@ class dashboard (
 
   if $passenger {
     class { 'dashboard::passenger':
-      dashboard_site   => $dashboard_site,
-      dashboard_port   => $dashboard_port,
-      dashboard_config => $dashboard_config,
-      dashboard_root   => $dashboard_root,
-      rails_base_uri   => $rails_base_uri,
+      dashboard_site    => $dashboard_site,
+      dashboard_port    => $dashboard_port,
+      dashboard_config  => $dashboard_config,
+      dashboard_root    => $dashboard_root,
+      rails_base_uri    => $rails_base_uri,
+      passenger_install => $passenger_install,
     }
   } else {
     file { 'dashboard_config':
@@ -158,7 +167,7 @@ class dashboard (
   }
 
   File {
-    mode    => '0755',
+    mode    => '0644',
     owner   => $dashboard_user,
     group   => $dashboard_group,
     require => Package[$dashboard_package],

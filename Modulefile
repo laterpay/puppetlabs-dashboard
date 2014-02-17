@@ -8,7 +8,7 @@ description 'Module to configure the Puppet Dashboard that also includes a Puppe
 project_page 'https://github.com/puppetlabs/puppetlabs-dashboard'
 
 ## Add dependencies, if any:
-dependency 'puppetlabs/mysql', '>= 0.9.0'
+dependency 'puppetlabs/mysql', '>= 2.0.0'
 dependency 'puppetlabs/apache', '>= 0.7.0'
 dependency 'puppetlabs/passenger', '>= 0.0.2'
 dependency 'puppetlabs/firewall', '>=0.4.2'
