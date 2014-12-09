@@ -99,11 +99,12 @@ class dashboard (
   class { 'mysql::server':
     root_password => $mysql_root_pw
   }
-  #mysql::db { $dashboard_db:
-  #  user     => "${dashboard_user}",
-  #  password => $dashboard_password,
-  #  charset  => $dashboard_charset,
-  #}
+  
+  mysql::db { $dashboard_db:
+    user     => $dashboard_user,
+    password => $dashboard_password,
+    charset  => $dashboard_charset,
+  }
 
   class { 'mysql::bindings':
     ruby_enable           => true,
