@@ -28,19 +28,14 @@
 # Sample Usage:
 #
 class dashboard::passenger (
-  $passenger_install = true,
   $dashboard_site,
   $dashboard_port,
   $dashboard_config,
-  $dashboard_root,
-  $rails_base_uri,
+  $dashboard_root
 ) inherits dashboard {
 
-  if $passenger_install {
-    require ::passenger
-  }
   include apache
-  include firewall
+  include passenger
 
   file { '/etc/init.d/puppet-dashboard':
     ensure => absent,
@@ -51,26 +46,10 @@ class dashboard::passenger (
     path   => $dashboard_config,
   }
 
-  # this could be made a conditional, but the dashboard is
-  # implicitly a public interface, so it seems OK to just
-  # open the port...
-  firewall { "${dashboard_port} accept - puppet dashboard":
-    port   => $dashboard_port,
-    proto  => 'tcp',
-    state  => 'NEW',
-    action => 'accept',
-  }
-
   apache::vhost { $dashboard_site:
     port              => $dashboard_port,
     priority          => '50',
     docroot           => "${dashboard_root}/public",
-    servername        => $dashboard_site,
-    options           => 'None',
-    override          => 'AuthConfig',
-    error_log         => true,
-    access_log        => true,
-    access_log_format => 'combined',
-    custom_fragment   => "RailsBaseURI ${rails_base_uri}",
   }
+
 }
